@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1074274355490",
+    "firebase_url": "https://aran-4c063.firebaseio.com",
+    "project_id": "aran-4c063",
+    "storage_bucket": "aran-4c063.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074274355490:android:8c00760b0e09491e",
+        "android_client_info": {
+          "package_name": "com.example.aran2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074274355490-vqh9fgpgioci087krsfngjha0g87vk64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNP1KCvbSghy8uDHKotG7Wmoo-Wwh2jSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074274355490-vqh9fgpgioci087krsfngjha0g87vk64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
