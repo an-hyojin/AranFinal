@@ -86,6 +86,7 @@ public class DaysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //        }
 
         if(diaryContents.get(position).imageUri!=null){
+            daysHolder.vp_images.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams temp = daysHolder.vp_images.getLayoutParams();
             temp.height = context.getResources().getDisplayMetrics().widthPixels;
             //      ViewGroup.LayoutParams temp = daysHolder.iv_tempV.getLayoutParams();
@@ -135,9 +136,9 @@ public class DaysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //            ViewGroup.LayoutParams temp = daysHolder.iv_tempV.getLayoutParams();
 //            temp.height = 100;
 //            daysHolder.iv_tempV.setLayoutParams(temp);
-            ViewGroup.LayoutParams temp = daysHolder.vp_images.getLayoutParams();
-            temp.height = 100;
-            daysHolder.vp_images.setLayoutParams(temp);
+
+//            daysHolder.vp_images.setVisibility(View.GONE);
+
 
         }
     }

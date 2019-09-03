@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -299,7 +300,13 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
             final String saveFile = "id/"+date+"_"+i+".jpg";
             UploadTask uploadTask = storageReference.putFile(imageList.get(i));
             final int position = i;
-            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            Task<Uri> uriTask = uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = 100.0 * (taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                    System.out.println("Upload is " + progress + "% done" + position);
+                }
+            }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if (!task.isSuccessful()) {
@@ -315,6 +322,21 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
                         if(position==imageList.size()-1){
                             DatabaseReference imageReference = databaseReference.child("imageUri");
                             imageReference.setValue(saveList);
+
+
+                            OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
+                            saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
+                                @Override
+                                public void onPositiveClicked() {
+                                    onBackPressed();
+                                }
+
+                                @Override
+                                public void onNegativeClicked() {
+
+                                }
+                            });
+                            saveFinishDialog.show();
                         }
                     }
                 }
@@ -329,21 +351,23 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
             DatabaseReference imageReference=  databaseReference.child("imageUri");
             Map<Integer, String> temp = new HashMap<>();
             imageReference.setValue(temp);
+
+            OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
+            saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
+                @Override
+                public void onPositiveClicked() {
+                    onBackPressed();
+                }
+
+                @Override
+                public void onNegativeClicked() {
+
+                }
+            });
+            saveFinishDialog.show();
         }
 
-        OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
-        saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
-            @Override
-            public void onPositiveClicked() {
-                onBackPressed();
-            }
 
-            @Override
-            public void onNegativeClicked() {
-
-            }
-        });
-        saveFinishDialog.show();
 
     }
 }

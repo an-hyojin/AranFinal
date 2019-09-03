@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(daysAdapter);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = database.getReference("id");
+        final DatabaseReference databaseReference = database.getReference("id");
 //        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -68,9 +68,29 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                DiaryContent diaryContent =dataSnapshot.getValue(DiaryContent.class);
-                diaryContentArrayList.add(diaryContent);
-                daysAdapter.notifyItemInserted(diaryContentArrayList.size()-1);
+                final DiaryContent diaryContent =dataSnapshot.getValue(DiaryContent.class);
+                diaryContentArrayList.add(0,diaryContent);
+                DatabaseReference imageRef = databaseReference.child("imageUri");
+                daysAdapter.notifyItemInserted(0);
+                imageRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot data :dataSnapshot.getChildren()){
+                            ArrayList<String> uris = new ArrayList<>();
+                            uris.add((String)data.getValue());
+                            diaryContent.imageUri = uris;
+                            diaryContentArrayList.remove(0);
+                            diaryContentArrayList.add(0, diaryContent);
+                            daysAdapter.notifyItemChanged(0, null);
+                        }
+                        daysAdapter.notifyItemChanged(0,null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
