@@ -2,29 +2,52 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout10"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="@color/colorIvory"
     tools:context=".DaysAddActivity">
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="395dp"
-            android:layout_height="414dp"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="309dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/addDiary_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:drawableLeft="@drawable/savec_drawable"
+                android:drawablePadding="3dp"
+                android:text="저장하기"
+                android:textColor="@color/colorBlack"
+                android:textSize="23sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addDiary_Contents" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -32,41 +55,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <Button
+                <ImageButton
                     android:id="@+id/addDiary_backBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="이전"
+                    android:background="@drawable/back_drawable"
+                    android:src="@drawable/back_drawable"
+                    android:textColor="@color/colorBlack"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/addDiary_Title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="일기 쓰기"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="일기장"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="23sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/addDiary_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="저장"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -80,6 +98,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
                 <TextView
+                    android:textSize="20sp"
                     android:id="@+id/addDiary_emotionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -88,11 +107,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="아이의 감정은 무엇인가요?"
+                    android:textColor="@color/colorBlack"
                     app:layout_constraintBottom_toTopOf="@+id/addDiary_emotionContainer"
                     app:layout_constraintStart_toStartOf="@id/constraintLayout6"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
+
+                    android:textSize="20sp"
                     android:id="@+id/addDiary_emotionEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,7 +142,6 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
-                    android:background="@color/colorWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -133,7 +154,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="visible">
 
                             <RadioGroup
                                 android:id="@+id/addDiary_positiveRadioGroup"
@@ -145,101 +167,121 @@
                                     android:id="@+id/emotion_happy"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="행복  " />
+                                    android:text="행복"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="18sp" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_thank"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="고마움" />
+                                    android:text="고마움"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_play"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="즐거움" />
+                                    android:text="즐거움"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_up"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="신남  " />
+                                    android:text="신남"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_love"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="사랑  " />
+                                    android:text="사랑"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_satisfied"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="만족  " />
+                                    android:text="만족"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_fresh"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="상쾌  " />
+                                    android:text="상쾌"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_like"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="좋음  " />
+                                    android:text="좋음"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_what"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="궁금함" />
+                                    android:text="궁금함"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_surprised"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="놀람  " />
+                                    android:text="놀람"
+                                    android:textColor="@color/colorBlack" />
                             </RadioGroup>
 
                             <RadioGroup
@@ -249,104 +291,123 @@
                                 android:orientation="horizontal">
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_sad"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="슬픔  " />
+                                    android:text="슬픔"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_disappointed"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="실망  " />
+                                    android:text="실망"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_scary"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="무서움" />
+                                    android:text="무서움"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_angry"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="화남  " />
+                                    android:text="화남"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_upset"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="짜증남" />
+                                    android:text="짜증남"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_lazy"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="귀찮음" />
+                                    android:text="귀찮음"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_ashamed"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="부끄러움" />
+                                    android:text="부끄러움"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_nervous"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
                                     android:text="초조함" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_sorry"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="서운함" />
+                                    android:text="서운함"
+                                    android:textColor="@color/colorBlack" />
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_lonely"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="외로움" />
+                                    android:text="외로움"
+                                    android:textColor="@color/colorBlack" />
                             </RadioGroup>
 
                             <RadioGroup
@@ -355,14 +416,17 @@
                                 android:layout_height="wrap_content">
 
                                 <RadioButton
+                                    android:textSize="18sp"
                                     android:id="@+id/emotion_input"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
                                     android:background="@drawable/custom_radio_btn"
                                     android:button="@null"
-                                    android:text="직접 입력" />
+                                    android:gravity="center"
+                                    android:text="직접 입력"
+                                    android:textColor="@color/colorBlack" />
                             </RadioGroup>
                         </LinearLayout>
                     </HorizontalScrollView>
@@ -370,27 +434,16 @@
 
                 <CheckBox
                     android:id="@+id/addDiary_showEmotion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Button"
+                    android:background="@drawable/checkbox_custom"
+                    android:button="@null"
                     app:layout_constraintBottom_toTopOf="@+id/addDiary_emotionContainer"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="#"
-                    android:textColor="@color/colorBlack"
-                    app:layout_constraintBottom_toTopOf="@+id/addDiary_emotionContainer"
-                    app:layout_constraintEnd_toStartOf="@+id/addDiary_emotionEditText"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -412,9 +465,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
-
                     android:layout_marginBottom="8dp"
-                    android:background="@color/colorWhite"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -431,69 +482,82 @@
                             android:orientation="horizontal">
 
                             <RadioButton
+                                android:textSize="18sp"
                                 android:id="@+id/state_health"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:background="@drawable/custom_radio_btn"
                                 android:button="@null"
-                                android:text="건강함" />
+                                android:text="건강함"
+                                android:textColor="@color/colorBlack" />
 
                             <RadioButton
+                                android:textSize="18sp"
                                 android:id="@+id/state_fresh"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:background="@drawable/custom_radio_btn"
                                 android:button="@null"
-                                android:text="생기 넘침" />
+                                android:text="생기 넘침"
+                                android:textColor="@color/colorBlack" />
 
                             <RadioButton
+                                android:textSize="18sp"
                                 android:id="@+id/state_noEnergy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:background="@drawable/custom_radio_btn"
                                 android:button="@null"
-                                android:text="기운 없음" />
+                                android:text="기운 없음"
+                                android:textColor="@color/colorBlack" />
 
                             <RadioButton
+                                android:textSize="18sp"
                                 android:id="@+id/state_normal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:background="@drawable/custom_radio_btn"
                                 android:button="@null"
-                                android:text="평소와 같음" />
+                                android:text="평소와 같음"
+                                android:textColor="@color/colorBlack" />
 
                             <RadioButton
+                                android:textSize="18sp"
                                 android:id="@+id/state_sick"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:background="@drawable/custom_radio_btn"
                                 android:button="@null"
-                                android:text="아픔" />
+                                android:text="아픔"
+                                android:textColor="@color/colorBlack" />
 
                             <RadioButton
+                                android:textSize="18sp"
                                 android:id="@+id/state_what"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:background="@drawable/custom_radio_btn"
                                 android:button="@null"
-                                android:text="직접 입력" />
+                                android:text="직접 입력"
+                                android:textColor="@color/colorBlack" />
                         </RadioGroup>
                     </HorizontalScrollView>
                 </LinearLayout>
 
                 <TextView
+                    android:textSize="20sp"
                     android:id="@+id/addDiary_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -502,6 +566,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="아이의 상태는 어떤가요?"
+                    android:textColor="@color/colorBlack"
                     app:layout_constraintBottom_toTopOf="@+id/addDiary_stateContainer"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -529,27 +594,18 @@
 
                 <CheckBox
                     android:id="@+id/addDiary_showState"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Button"
+                    android:background="@drawable/checkbox_custom"
+                    android:button="@null"
                     app:layout_constraintBottom_toTopOf="@+id/addDiary_stateContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="#"
-                    android:textColor="@color/colorBlack"
-                    app:layout_constraintBottom_toTopOf="@+id/addDiary_stateContainer"
-                    app:layout_constraintEnd_toStartOf="@+id/addDiary_stateEditText"
-                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText
@@ -564,54 +620,146 @@
                 android:background="@drawable/border"
                 android:ems="10"
                 android:gravity="start|top"
+                android:hint="오늘 일기를 적어주세요"
                 android:inputType="textMultiLine"
+                android:textColor="@color/colorBlack"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout9" />
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/addDiary_photoPager"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout3"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addDiary_Contents" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
 
-            <Button
-                android:id="@+id/addDiary_addPhotoBtn"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="오늘 아이에게 어떤 일이 있었나요?"
+                    android:textColor="@color/colorBlack"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/addDiary_babyDiary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:ems="30"
+                    android:hint="아이에게 어떤 일이 있었는 지 질문하고 기록해 주세요."
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/colorBlack"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout9"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="사진추가"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addDiary_photoPager"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
-            <Button
-                android:id="@+id/addDiary_removePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp"
-                android:text="사진삭제"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/addDiary_addPhotoBtn"
-                app:layout_constraintTop_toBottomOf="@+id/addDiary_photoPager" />
+                <Button
+                    android:id="@+id/addDiary_removePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="사진삭제"
+                    android:textColor="@color/colorBlack"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addDiary_photoPager" />
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/addDiary_photoPager"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:textSize="20sp"
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="사진을 추가해주세요"
+                        android:textColor="@color/colorBlack"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/addDiary_addPhotoBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/plusbtn_drawable"
+                        android:src="@drawable/plusbtn_drawable"
+                        android:textColor="@color/colorBlack"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textView6"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/addDiary_explainPhoto"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/infobtn"
+                        android:src="@drawable/infobtn_drawable"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,6 +1,7 @@
 package com.example.aran2;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,11 +12,13 @@ import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,7 +33,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,8 +44,11 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
     EditText stateEditText, emotionEditText, todayContext;
     LinearLayout stateLayout, emotionLayout;
     CheckBox showBtn_state, showBtn_emotion;
+    String date, inputDate;
     ViewPageAdapter viewPageAdapter;
-    Button btn_addPhoto, btn_removePhoto, btn_addDiary;
+    ArrayList<String> modiList;
+    Button  btn_removePhoto, btn_addDiary;
+    ImageButton btn_addPhoto,btn_explain;
     ArrayList<Uri> imageList;
     RadioGroup.OnCheckedChangeListener OnCheckedChangeListener_positive,OnCheckedChangeListener_negative,OnCheckedChangeListener_input;
     RadioGroup rg_selectPositiveGroup, rg_selectNegativeGroup, rg_selectStateGroup;
@@ -51,8 +56,12 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
     SimpleDateFormat dateInfo = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat data = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
     Map<String, String> saveList = new HashMap<>();
+    boolean isLoading = false;
     ViewPager vp_imageViews;
-    ArrayList<File> files = new ArrayList<>();
+    ProgressDialog p;
+    boolean photoModi = false;
+    EditText babyDiary;
+    boolean isModi;
     int beforIdState, beforeIdEmotion;
     final static int SHOW_IMAGES = 13;
     @Override
@@ -68,7 +77,7 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
         btn_addPhoto = findViewById(R.id.addDiary_addPhotoBtn);
         todayContext =findViewById(R.id.addDiary_Contents);
         ViewGroup.LayoutParams editTextParam = todayContext.getLayoutParams();
-        editTextParam.height = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
+        editTextParam.height = (int)(getApplicationContext().getResources().getDisplayMetrics().widthPixels*0.4);
         todayContext.setLayoutParams(editTextParam);
         btn_addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,40 +93,106 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
         showBtn_emotion.setOnClickListener(this);
         showBtn_state.setChecked(true);
         showBtn_state.setOnClickListener(this);
+
         vp_imageViews = findViewById(R.id.addDiary_photoPager);
+        isModi = getIntent().getBooleanExtra("isModi", false);
+
         rg_selectPositiveGroup = findViewById(R.id.addDiary_positiveRadioGroup);
         rg_selectNegativeGroup = findViewById(R.id.addDiary_negativeRadioGroup);
         rg_input = findViewById(R.id.addDiary_input);
-        RadioButton radioButton = findViewById(R.id.emotion_happy);
-        radioButton.setChecked(true);
-        beforeIdEmotion = R.id.emotion_happy;
-        ((RadioButton)findViewById(R.id.emotion_happy)).setChecked(true);
-        ((RadioButton)findViewById(R.id.emotion_happy)).setBackgroundResource(R.drawable.custom_radio_onclick);
-        emotionEditText.setText(((RadioButton) findViewById(R.id.emotion_happy)).getText());
-        ((RadioButton)findViewById(R.id.state_health)).setChecked(true);
-        ((RadioButton)findViewById(R.id.state_health)).setBackgroundResource(R.drawable.custom_radio_onclick);
+        babyDiary = findViewById(R.id.addDiary_babyDiary);
+        if(!isModi){
+            RadioButton radioButton = findViewById(R.id.emotion_happy);
+            radioButton.setChecked(true);
+            beforeIdEmotion = R.id.emotion_happy;
+            radioButton.setBackgroundResource(R.drawable.custom_radio_onclick);
+            emotionEditText.setText(radioButton.getText());
+            emotionEditText.setClickable(false);
+            emotionEditText.setEnabled(false);
+
+            RadioButton stateRadio = findViewById(R.id.state_health);
+            stateRadio.setChecked(true);
+            beforIdState = R.id.state_health;
+            stateRadio.setBackgroundResource(R.drawable.custom_radio_onclick);
+            stateEditText.setText(stateRadio.getText());
+
+        }else{
+            babyDiary.setText(getIntent().getStringExtra("baby"));
+            todayContext.setText(getIntent().getStringExtra("content"));
+            int emoId = getIntent().getIntExtra("emotionId", R.id.emotion_happy);
+            RadioButton radioButton = findViewById(emoId);
+            radioButton.setChecked(true);
+            beforeIdEmotion = emoId;
+            emotionEditText.setText(radioButton.getText());
+            radioButton.setBackgroundResource(R.drawable.custom_radio_onclick);
+            if(radioButton.getText().equals("직접 입력")){
+                emotionEditText.setText(getIntent().getStringExtra("emotion"));
+                emotionEditText.setEnabled(true);
+                emotionEditText.setClickable(true);
+
+            }else{
+                emotionEditText.setEnabled(false);
+                emotionEditText.setClickable(false);
+            }
+            int stateId = getIntent().getIntExtra("stateId", R.id.state_health);
+            RadioButton stateRadio = findViewById(stateId);
+            stateRadio.setChecked(true);
+            beforIdState = stateId;
+            stateRadio.setBackgroundResource(R.drawable.custom_radio_onclick);
+            stateEditText.setText(stateRadio.getText());
+            if(stateRadio.getText().equals("직접 입력")){
+                stateEditText.setText(getIntent().getStringExtra("state"));
+                stateEditText.setEnabled(true);
+                stateEditText.setClickable(true);
+            }else{
+                stateEditText.setEnabled(false);
+                stateEditText.setClickable(false);
+            }
+        }
+        modiList = getIntent().getStringArrayListExtra("imageUri");
+        btn_removePhoto = findViewById(R.id.addDiary_removePhoto);
         imageList = new ArrayList<>();
-        viewPageAdapter = new ViewPageAdapter(getApplicationContext(), imageList);
-        stateEditText.setText(((RadioButton) findViewById(R.id.state_health)).getText());
+        if(modiList==null||modiList.size()==0){
+            viewPageAdapter = new ViewPageAdapter(getApplicationContext(), imageList);
+            vp_imageViews.setAdapter(viewPageAdapter);
+            photoModi= true;
+            ViewGroup.LayoutParams vp_imageViewsParam = vp_imageViews.getLayoutParams();
+            vp_imageViewsParam.height = 0;
+
+            vp_imageViews.setLayoutParams(vp_imageViewsParam);
+
+        }else{
+            photoModi = false;
+            DiaryViewpageAdapter TempviewPageAdapter = new DiaryViewpageAdapter(getApplicationContext(), modiList, false);
+            vp_imageViews.setAdapter(TempviewPageAdapter);
+            ViewGroup.LayoutParams vp_imageViewsParam = vp_imageViews.getLayoutParams();
+            vp_imageViewsParam.height = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
+            vp_imageViews.setLayoutParams(vp_imageViewsParam);
+            btn_removePhoto.setVisibility(View.VISIBLE);
+        }
         btn_addDiary = findViewById(R.id.addDiary_btn);
         btn_addDiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveInfo();
+                if(checkInputExist()){
+                    btn_addDiary.setClickable(false);
+                    isLoading = true;
+                    saveInfo();
+                }
             }
         });
-        vp_imageViews.setAdapter(viewPageAdapter);
-        beforIdState = R.id.state_health;
-        emotionEditText.setClickable(false);
-        emotionEditText.setEnabled(false);
-        btn_removePhoto = findViewById(R.id.addDiary_removePhoto);
+
+
         btn_removePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                photoModi = true;
                 ViewGroup.LayoutParams vp_imageViewsParam = vp_imageViews.getLayoutParams();
                 vp_imageViewsParam.height = 0;
                 vp_imageViews.setLayoutParams(vp_imageViewsParam);
                 btn_removePhoto.setVisibility(View.GONE);
+                vp_imageViews.setAdapter(null);
+                imageList.clear();
             }
         });
         OnCheckedChangeListener_positive = new RadioGroup.OnCheckedChangeListener() {
@@ -197,10 +272,7 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         });
-        ViewGroup.LayoutParams vp_imageViewsParam = vp_imageViews.getLayoutParams();
-        vp_imageViewsParam.height = 0;
-        vp_imageViews.setLayoutParams(vp_imageViewsParam);
-        final Button addDiary_back = findViewById(R.id.addDiary_backBtn);
+               final ImageButton addDiary_back = findViewById(R.id.addDiary_backBtn);
         addDiary_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,7 +281,37 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
         });
 
 
+        btn_explain = findViewById(R.id.addDiary_explainPhoto);
+        btn_explain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OneButtonDialog oneButtonDialog = new OneButtonDialog(DaysAddActivity.this, "사진 추가 방법", "1. 사진 추가 버튼을 누릅니다.\n2.두 개 이상의 사진을 고르고 싶을 땐 꾹 눌러서 추가해주세요.\n※세 장까지 추가할 수 있습니다.",
+                        "확인");
+                oneButtonDialog.show();
+            }
+        });
+
     }
+
+    public boolean checkInputExist(){
+        if(emotionEditText.getText().toString().equals("")){
+            OneButtonDialog showDialog = new OneButtonDialog(DaysAddActivity.this
+                    , "아이의 감정이 입력되지 않았어요!", "감정을 입력해주세요", "확인");
+            showDialog.show();
+            return false;
+        }else if(stateEditText.getText().toString().equals("")){
+            OneButtonDialog showDialog = new OneButtonDialog(DaysAddActivity.this, "아이의 상태가 입력되지 않았어요!", "상태를 입력해주세요", "확인");
+            showDialog.show();
+            return false;
+        }else if(babyDiary.getText().toString().equals("")){
+            OneButtonDialog showDialog = new OneButtonDialog(DaysAddActivity.this, "아이가 어떤 일이 있었는 지 입력되지 않았어요!", "오늘 있던 일을 입력해주세요", "확인");
+            showDialog.show();
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -223,15 +325,15 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
                     System.out.print("내꺼 ");
                     btn_removePhoto.setVisibility(View.VISIBLE);
                     if(data.getClipData()!=null) {
+                        photoModi=true;
                         imageList.clear();
-                        files.clear();
+
                         ClipData clipData = data.getClipData();
                         for (int i = 0; i < clipData.getItemCount(); i++) {
                             if(i>=3){
                                 break;
                             }
                             imageList.add(clipData.getItemAt(i).getUri());
-                            files.add(new File(imageList.get(i).getPath()));
                         }
 
                         ViewGroup.LayoutParams vp_imageViewsParam = vp_imageViews.getLayoutParams();
@@ -243,9 +345,8 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
                     }else if(data.getData()!=null){
                         imageList.clear();
                         imageList.add(data.getData());
-                        files.clear();
+                        photoModi = true;
 
-                        files.add(new File(data.getData().getPath()));
                         vp_imageViews.setAdapter(new ViewPageAdapter(getApplicationContext(), imageList));
                         ViewGroup.LayoutParams vp_imageViewsParam = vp_imageViews.getLayoutParams();
                         vp_imageViewsParam.height = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
@@ -254,6 +355,13 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
 
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(!isLoading){
+            super.onBackPressed();
         }
     }
     @Override
@@ -279,84 +387,50 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void saveInfo(){
-        String emotion = "#"+emotionEditText.getText().toString();
-        String state = "#"+stateEditText.getText().toString();
+
+        String emotion = emotionEditText.getText().toString();
+        String state = stateEditText.getText().toString();
         String content = todayContext.getText().toString();
         saveList.clear();
         Date today = new Date();
-        final String date = data.format(today);
-        final String inputDate = dateInfo.format(today);
+        date = data.format(today);
+        inputDate = dateInfo.format(today);
+        if(isModi){
+            date = getIntent().getStringExtra("id");
+            inputDate = getIntent().getStringExtra("day");
+        }
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference databaseReference = database.getReference("id").child(date);
         final Hashtable<String, Object> diaryContent = new Hashtable<>();
+        diaryContent.put("id", date);
         diaryContent.put("emotion", emotion);
         diaryContent.put("state", state);
         diaryContent.put("content", content);
+        diaryContent.put("baby", babyDiary.getText().toString());
+        diaryContent.put("emotionId", beforeIdEmotion);
+        diaryContent.put("stateId", beforIdState);
+
+        diaryContent.put("day", inputDate);
         final FirebaseStorage storage = FirebaseStorage.getInstance();
 
-
-        for(int i = 0 ; i< imageList.size();i++){
-            final StorageReference storageReference = storage.getReference().child("id/"+date+"_"+i+".jpg");
-            final String saveFile = "id/"+date+"_"+i+".jpg";
-            UploadTask uploadTask = storageReference.putFile(imageList.get(i));
-            final int position = i;
-            Task<Uri> uriTask = uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = 100.0 * (taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    System.out.println("Upload is " + progress + "% done" + position);
-                }
-            }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-                    return storageReference.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        saveList.put(String.valueOf(position), saveFile);
-                        if(position==imageList.size()-1){
-                            DatabaseReference imageReference = databaseReference.child("imageUri");
-                            imageReference.setValue(saveList);
-
-
-                            OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
-                            saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
-                                @Override
-                                public void onPositiveClicked() {
-                                    onBackPressed();
-                                }
-
-                                @Override
-                                public void onNegativeClicked() {
-
-                                }
-                            });
-                            saveFinishDialog.show();
-                        }
-                    }
-                }
-            });
-            diaryContent.put("day", inputDate);
+        p = new ProgressDialog(DaysAddActivity.this);
+        p.setCancelable(false);
+        p.setTitle("클라우드에 올리는 중입니다.");
+        p.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+        p.show();
+        final ArrayList<String> imageUri =new ArrayList<>();
+        if(!photoModi){
+            diaryContent.put("imageUri", modiList);
             databaseReference.setValue(diaryContent);
-        }
-        if(imageList.size()<=0) {
-
-            diaryContent.put("day", inputDate);
-            databaseReference.setValue(diaryContent);
-            DatabaseReference imageReference=  databaseReference.child("imageUri");
-            Map<Integer, String> temp = new HashMap<>();
-            imageReference.setValue(temp);
-
+            p.dismiss();
             OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
             saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
                 @Override
                 public void onPositiveClicked() {
-                    onBackPressed();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("id", date);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
                 }
 
                 @Override
@@ -365,9 +439,93 @@ public class  DaysAddActivity extends AppCompatActivity implements View.OnClickL
                 }
             });
             saveFinishDialog.show();
+        }else {
+            for (int i = 0; i < imageList.size(); i++) {
+                final StorageReference storageReference = storage.getReference().child("id/" + date + "_" + i + ".jpg");
+                final String saveFile = "id/" + date + "_" + i + ".jpg";
+                UploadTask uploadTask = storageReference.putFile(imageList.get(i));
+
+                final int position = i;
+                p.setMessage(i + "/" + imageList.size());
+                double progress = 100.0 * (i / imageList.size());
+                p.setProgress((int) progress);
+
+                Task<Uri> uriTask = uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = 100.0 * (taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        p.setProgress((int) progress);
+
+                        System.out.println("Upload is " + progress + "% done" + position);
+                    }
+                }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return storageReference.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            imageUri.add(saveFile);
+                            if (position == imageList.size() - 1) {
+                                diaryContent.put("imageUri", imageUri);
+                                databaseReference.setValue(diaryContent);
+                                p.dismiss();
+                                OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
+                                saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
+                                    @Override
+                                    public void onPositiveClicked() {
+                                        Intent resultIntent = new Intent();
+                                        resultIntent.putExtra("id", date);
+                                        setResult(RESULT_OK, resultIntent);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onNegativeClicked() {
+
+                                    }
+                                });
+                                saveFinishDialog.show();
+                            }
+                        }
+                    }
+                });
+            }
+            if (imageList.size() <= 0) {
+
+                databaseReference.setValue(diaryContent);
+                p.dismiss();
+
+                OneButtonDialog saveFinishDialog = new OneButtonDialog(DaysAddActivity.this, "일기 저장", "일기가 성공적으로 저장되었습니다.", "확인");
+                saveFinishDialog.setDialogOnClickListener(new DialogOnClickListener() {
+                    @Override
+
+                    public void onPositiveClicked() {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("id", date);
+                        setResult(RESULT_OK, resultIntent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
+                saveFinishDialog.show();
+            }
+
         }
 
-
-
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+        overridePendingTransition(R.anim.slide_right_show,R.anim.slide_right_remove);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.aran2;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +24,10 @@ import java.util.Map;
 public class DiaryViewpageAdapter extends PagerAdapter {
     Context context;
     ArrayList<String> images;
-    public  DiaryViewpageAdapter(Context context,ArrayList<String> images){
+    boolean isSmall;
+    public  DiaryViewpageAdapter(Context context,ArrayList<String> images, boolean isSmall){
         super();
-
+        this.isSmall = isSmall;
         this.context = context;
         this.images = images;
 
@@ -45,6 +48,7 @@ public class DiaryViewpageAdapter extends PagerAdapter {
         FirebaseStorage storage=FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child(images.get(position));
         final ImageView imageView = new ImageView(context);
+        final int posi = position;
         ((ViewPager)container).addView(imageView);
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -57,6 +61,19 @@ public class DiaryViewpageAdapter extends PagerAdapter {
 
             }
         });
+        if(isSmall){
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        Intent intent = new Intent(context, ViewPagerActivity.class);
+                        intent.putStringArrayListExtra("uris", images);
+                        intent.putExtra("clickPosition",posi);
+                        context.startActivity(intent);
+
+
+                }
+            });
+        }
         return imageView;
     }
 
